@@ -2,7 +2,7 @@ console.log("It works");
 const cafeList = document.querySelector('#all-cafe')
 const submitButtonCafe = document.querySelector("#submitCafe");
 
-// Validate if the username exists in the users table
+// check if username exists in users table
 function validateUsernameBeforeRegister() {
     const username = document.querySelector("#usernameRequired").value; // Hent værdien fra inputfeltet
 
@@ -32,7 +32,6 @@ function validateUsernameBeforeRegister() {
             return Promise.reject(error);
         });
 }
-
 
 // -------------------------- Button to Add New Cafe -------------------
 submitButtonCafe.addEventListener("click", () => {
@@ -198,7 +197,8 @@ filterButton.addEventListener("click", fetchCafesBySearchFilter);
 async function login () {
     const usernameValue = document.querySelector('#loginUsername').value
     const passwordValue = document.querySelector('#loginPassword').value
-    const url = (`http://localhost:4000/login`)
+    console.log('Sending data to login endpoint:', { username: usernameValue, password: passwordValue });
+    const url = ('http://localhost:4000/login')
     // Check if username and password exist
     try {
         const response = await fetch(url, {
@@ -206,11 +206,11 @@ async function login () {
             headers: {
                 'Content-Type': 'application/json',
             },
-        body: JSON.stringify({
-            username: usernameValue,
-            password: passwordValue
-        }),
-    });
+            body: JSON.stringify({
+                username: usernameValue,
+                password: passwordValue,
+            }),
+        });
         if (!response.ok) {
             throw new Error
         }
@@ -221,7 +221,7 @@ async function login () {
     }
 }
 
-// Click event
+// Click event for login
 const loginButton = document.querySelector('#loginButton')
 loginButton.addEventListener('click', login)
 

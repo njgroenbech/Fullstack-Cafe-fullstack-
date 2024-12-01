@@ -28,16 +28,12 @@ app.listen(port, () => {
 
 // Cafes endpoint that allows multiple conditions (searching through cafes)
 app.get('/cafes', (req, res) => {
-    // Extract query parameters from the request
     const { name, location, rating, price_range, size, description } = req.query;
-
-    // Start with a base SQL query
-    let sql = "SELECT * FROM cafes WHERE 1=1"; // Dummy condition to allow appending dynamic filters
-
-    // Array to store query values
+    // allow dynamic filtering
+    let sql = "SELECT * FROM cafes WHERE 1=1";
     const params = [];
 
-    // Dynamically add conditions based on the parameters
+    // Add conditions based on parametrs
     if (name) {
         sql += " AND name LIKE ?";
         params.push(`%${name}%`); // Partial match
@@ -48,12 +44,13 @@ app.get('/cafes', (req, res) => {
     }
     if (rating) {
         sql += " AND rating >= ?";
-        params.push(parseFloat(rating)); // Ensure it's parsed as a number
+        // parse as (decimal) number
+        params.push(parseFloat(rating));
     }
     if (price_range) {
-        const splitPrice = price_range.split(","); // Split comma-separated values
+        const splitPrice = price_range.split(",");
         sql += " AND price_range IN (?)";
-        params.push(splitPrice); // MySQL2 can handle arrays in placeholders
+        params.push(splitPrice);
     }
     if (size) {
         const splitSize = size.split(",");
@@ -65,13 +62,13 @@ app.get('/cafes', (req, res) => {
         params.push(`%${description}%`);
     }
 
-    // Execute the query with the parameters
+    // execute query
     connection.query(sql, params, (error, results) => {
         if (error) {
             console.error('Error executing query:', error);
             return res.status(500).send('Database query error');
         }
-        res.json(results); // Send back the filtered results
+        res.json(results);
     });
 });
 
@@ -231,7 +228,7 @@ app.post('/users/new', (req, res) => {
             return res.status(409).send('Username or email already in use');
         }
         // ---------------------------- Insert into table users -------------------- //
-        const query = 'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)';
+        const query = 'INSERT INTO users (username, email, password) VALUES (?, ?, ?)';
         connection.query(query, [username, email, password], (error, results) => {
             res.status(201).json({ id: results.insertId, username, email });
         });
@@ -239,7 +236,7 @@ app.post('/users/new', (req, res) => {
 });
 
 // Function to check if user exists
-function checkIfUserExists (user_id) {
+/* function checkIfUserExists (user_id) {
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM users WHERE user_id = ?'
         connection.query(query, [user_id], (error, results) => {
@@ -306,7 +303,7 @@ app.post('/favorites', async (req, res) => {
     } catch (error) {
         res.status(500).send('Serverside error')
     }
-});
+});*/
 
 // ----------------- Check if username is in users table to be able to push into cafe table  ---------------------//
 // Endpoint to check if a username exists in the users table
@@ -324,17 +321,24 @@ app.get('/users/check', (req, res) => {
 
 // Endpoint to log in
 app.post('/login', (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
+    const { username, password } = req.body
+    console.log(username, password)
     const query = 'SELECT * FROM users WHERE username = ? AND password = ?'
     connection.query(query, [username, password], (error, result) => {
         if (error) {
-            res.send(error)
+            return res.status(500).send('Internal server error')
         }
-        if (result.length > 0) {
-            res.send(result)
-        } else {
-            res.status(404).send('Wrong Username/Password combination')
+        if (result.length === 0) {
+            return res.status(401).send('Wrong username/password combination');
         }
+        const user = result[0];
+        // debugging
+        console.log('login successful:', user);
+        return res.status(200).json({
+            user_id: user.user_id,
+            username: user.username,
+            email: user.email,
+        });
     })
 });
+
