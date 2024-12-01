@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studenter Cafeer</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/css/multi-select-tag.css">
+</head>
+<body>
+<div class="flexbox">
+  <div class="form-container">
+    <div class="form-header">Register new Cafe</div>
+    <form id="modernForm">
+      <div class="form-group">
+        <label for="usernameRequired">Username</label>
+        <input type="text" id="usernameRequired" name="usernameRequired" placeholder="Username is required">
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="location">Location eg(Nørrebrogade 72, 2200 København)</label>
+        <input type="text" id="location" name="location" required>
+      </div>
+      <div class="form-group">
+        <label for="rating">Rating (1-5)</label>
+        <input type="number" id="rating" name="rating" required min="1" max="5">
+      </div>
+      <div class="form-group">
+        <label for="description">Description of Cafe</label>
+        <input type="text" id="description" name="description" required>
+      </div>
+      <div class="form-group">
+        <button id="submitCafe" type="button">Submit</button>
+      </div>
+    </form>
+  </div>
+  <ul id="all-cafe"></ul>
+</div>
+<div class="flexbox">
+  <div class="form-container">
+    <div class="form-header">Create a new user</div>
+    <form id="modernFormUser">
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail</label>
+        <input type="text" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Your password">
+      </div>
+      <div class="form-group">
+        <button id="submitUser" type="button">Submit</button>
+      </div>
+    </form>
+  </div>
+  <ul id="all-user"></ul>
+</div>
+<div id="search">
+  <input type="text" id="nameF" placeholder="Search by name">
+  <input type="text" id="locationF" placeholder="City">
+  <input type="number" id="ratingF" placeholder="Minimum rating (1-5)">
+  <select name="prices" id="prices" multiple>
+    <option value="low">Low - Budget-friendly options</option>
+    <option value="mid">Mid - Moderate pricing</option>
+    <option value="high">High - Premium pricing</option>
+  </select>
+  <select name="size" id="size" multiple>
+    <option value="small">Small - A small cafe</option>
+    <option value="medium">Medium - Average sized cafe</option>
+    <option value="large">Large cafe</option>
+  </select>
+  <input type="text" id="descriptionF" placeholder="Search in description">
+  <button id="filterButton">Search</button>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+<script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>
+<script>
+  new MultiSelectTag('size')
+  new MultiSelectTag('prices')
+</script>
+</body>
+</html>
+
