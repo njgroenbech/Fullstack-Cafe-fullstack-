@@ -1,19 +1,6 @@
-//
 console.log("It works");
-
 const cafeList = document.querySelector('#all-cafe')
 const submitButtonCafe = document.querySelector("#submitCafe");
-
-fetch("http://localhost:4000/cafes")
-    .then(response => response.json())
-    .then(data => {
-        data.forEach(e => {
-            const newElement = document.createElement("li");
-            newElement.innerText = e.name;
-            cafeList.appendChild(newElement);
-        });
-    });
-
 
 // Validate if the username exists in the users table
 function validateUsernameBeforeRegister() {
@@ -136,7 +123,7 @@ const filterButton = document.querySelector("#filterButton");
 
 
 // Funktion til at hive fat og vise cafeerne
-function fetchCafes() {
+function fetchCafesBySearchFilter() {
     // Indsamling af inputværdier
     const name = document.querySelector("#nameF").value;
     const location = document.querySelector("#locationF").value;
@@ -167,7 +154,6 @@ function fetchCafes() {
     }
     // Handle multiple conditions (search filters)
 
-
     // Lav en fetch anmodning til vores API
     fetch(`http://localhost:4000${query}`)
         .then(response => {
@@ -179,7 +165,6 @@ function fetchCafes() {
         .then(data => {
             /// Til at fjerne hvad der er i forvejen
             cafeList.innerHTML = "";
-
 
             // Hvis der ikke er nogle cafeer
             if (data.length === 0) {
@@ -193,6 +178,11 @@ function fetchCafes() {
                 listCafes.innerText = `${cafe.name}, ${cafe.location}, Rating: ${cafe.rating}), 
                 Price range: ${cafe.price_range} - Size: ${cafe.size}`;
                 cafeList.appendChild(listCafes);
+
+                const createFavoriteButton = document.createElement('button')
+                createFavoriteButton.dataset.id = cafe.cafe_id
+                createFavoriteButton.innerHTML = "Favorite"
+                listCafes.appendChild(createFavoriteButton)
             });
         })
         .catch(error => {
@@ -202,9 +192,36 @@ function fetchCafes() {
 }
 
 // Event listener til filter-knappen
-filterButton.addEventListener("click", fetchCafes);
+filterButton.addEventListener("click", fetchCafesBySearchFilter);
 
-// Function to add a favorites
+// Function to handle logins
+async function login () {
+    const usernameValue = document.querySelector('#loginUsername').value
+    const passwordValue = document.querySelector('#loginPassword').value
+    const url = (`http://localhost:4000/login`)
+    // Check if username and password exist
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        body: JSON.stringify({
+            username: usernameValue,
+            password: passwordValue
+        }),
+    });
+        if (!response.ok) {
+            throw new Error
+        }
+        const json = await response.json();
+        console.log("successfully logged in")
+    } catch (error) {
+        console.error(error.message)
+    }
+}
 
-
+// Click event
+const loginButton = document.querySelector('#loginButton')
+loginButton.addEventListener('click', login)
 

@@ -59,7 +59,25 @@
         <button id="submitUser" type="button">Submit</button>
       </div>
     </form>
-  </div>
+    <div class="flexbox">
+      <div class="form-container">
+        <div class="form-header">Login</div>
+        <form id="loginForm">
+          <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" name="username" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" name="password" placeholder="Enter your password" required>
+          </div>
+          <div class="form-group">
+            <button id="loginButton" type="button">Login</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
   <ul id="all-user"></ul>
 </div>
 <div id="search">
@@ -79,6 +97,7 @@
   <input type="text" id="descriptionF" placeholder="Search in description">
   <button id="filterButton">Search</button>
 </div>
+
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="main.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/habibmhamadi/multi-select-tag@3.1.0/dist/js/multi-select-tag.js"></script>

@@ -26,7 +26,7 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
-// Cafes endpoint that allows multiple conditions
+// Cafes endpoint that allows multiple conditions (searching through cafes)
 app.get('/cafes', (req, res) => {
     // Extract query parameters from the request
     const { name, location, rating, price_range, size, description } = req.query;
@@ -227,17 +227,85 @@ app.post('/users/new', (req, res) => {
             console.error('Error checking for existing user:', checkError);
             return res.status(500).send('Database query error');
         }
-
         if (results.length > 0) {
             return res.status(409).send('Username or email already in use');
         }
-
         // ---------------------------- Insert into table users -------------------- //
         const query = 'INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)';
         connection.query(query, [username, email, password], (error, results) => {
             res.status(201).json({ id: results.insertId, username, email });
         });
     });
+});
+
+// Function to check if user exists
+function checkIfUserExists (user_id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM users WHERE user_id = ?'
+        connection.query(query, [user_id], (error, results) => {
+            if (error) {
+                return reject(error)
+            } else {
+                resolve(results.length > 0)
+            }
+        });
+    });
+}
+// Check if user exists
+function checkIfCafeExists (cafe_id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM cafes WHERE cafe_id = ?'
+        connection.query(query, [cafe_id], (error, results) => {
+            if (error) {
+                return reject(error)
+            } else {
+                resolve(results.length > 0)
+            }
+        });
+    });
+}
+// Check if favorite exists
+function checkIfFavoriteExists(user_id, cafe_id) {
+    return new Promise((resolve, reject) => {
+        const query = 'SELECT * FROM favorites WHERE user_id = ? AND cafe_id = ?';
+        connection.query(query, [user_id, cafe_id], (error, results) => {
+            if (error) return reject(error);
+            resolve(results.length > 0);
+        });
+    });
+}
+function addToFavorites (user_id, cafe_id) {
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO favorites (user_id, cafe_id) VALUES (?, ?)'
+        connection.query(query, [user_id, cafe_id], (error, results) => {
+            if (error) {
+                return reject(error)
+            }
+            resolve(results);
+        });
+    });
+}
+// ------------------- Endpoint for adding favorites-------------------- //
+app.post('/favorites', async (req, res) => {
+    try {
+        const { user_id, cafe_id } = req.body
+        const userExists = await checkIfUserExists(user_id);
+        if (!userExists) {
+            return res.status(404).send('user_id not found');
+        }
+        const cafeExists = await checkIfCafeExists(cafe_id);
+        if (!cafeExists) {
+            return res.status(404).send('cafe_id not found')
+        }
+        const favoriteExists = await checkIfFavoriteExists(user_id, cafe_id);
+        if (favoriteExists) {
+            return res.status(404).send('Favorite already exists')
+        }
+        await addToFavorites(user_id, cafe_id);
+        res.status(201).send('Favorite added')
+    } catch (error) {
+        res.status(500).send('Serverside error')
+    }
 });
 
 // ----------------- Check if username is in users table to be able to push into cafe table  ---------------------//
@@ -252,4 +320,21 @@ app.get('/users/check', (req, res) => {
             return res.status(404).json({ exists: false });
         }
     });
+});
+
+// Endpoint to log in
+app.post('/login', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+    const query = 'SELECT * FROM users WHERE username = ? AND password = ?'
+    connection.query(query, [username, password], (error, result) => {
+        if (error) {
+            res.send(error)
+        }
+        if (result.length > 0) {
+            res.send(result)
+        } else {
+            res.status(404).send('Wrong Username/Password combination')
+        }
+    })
 });
