@@ -1,5 +1,5 @@
 console.log("It works");
-const cafeList = document.querySelector('#all-cafe')
+const cafeTableBody = document.querySelector('#cafes tbody');
 const submitButtonCafe = document.querySelector("#submitCafe");
 
 // check if username exists in users table
@@ -41,13 +41,16 @@ submitButtonCafe.addEventListener("click", () => {
             const getLocation = document.querySelector("#location").value;
             const getRating = document.querySelector('#rating').value;
             const getDescription = document.querySelector('#description').value;
-
+            const getPriceRange = document.querySelector('#price_range').value;
+            const getSizeRange = document.querySelector('#size_range').value;
 
             const jsonObjectToPost = {
                 name: getName,
                 location: getLocation,
                 rating: getRating,
-                description: getDescription
+                description: getDescription,
+                price_range: getPriceRange,
+                size: getSizeRange
             };
 
             const fetchConfiguration = {
@@ -132,26 +135,28 @@ function fetchCafesBySearchFilter() {
     const size = document.querySelector('#size').value
 
     // Opbyg query string baseret på brugerens input
-    let query = "/cafes?";
+    const params = new URLSearchParams();
+
     if (name) {
-        query += `name=${name}&`;
+        params.append("name", name);
     }
     if (location) {
-        query += `location=${location}&`;
+        params.append("location", location);
     }
     if (rating) {
-        query += `rating > ${rating}&`;
+        params.append("rating", rating);
     }
     if (price_range) {
-        query += `price_range=${price_range}`
+        params.append("price_range", price_range);
     }
     if (size) {
-        query += `size=${size}`
+        params.append("size", size);
     }
     if (description) {
-        query += `description=${description}`;
+        params.append("description", description);
     }
-    // Handle multiple conditions (search filters)
+
+    const query = `/cafes?${params.toString()}`;
 
     // Lav en fetch anmodning til vores API
     fetch(`http://localhost:4000${query}`)
@@ -163,11 +168,11 @@ function fetchCafesBySearchFilter() {
         })
         .then(data => {
             /// Til at fjerne hvad der er i forvejen
-            cafeList.innerHTML = "";
+            cafeTableBody.innerHTML = "";
 
             // Hvis der ikke er nogle cafeer
             if (data.length === 0) {
-                cafeList.innerHTML = "<li>No cafes found matching your search</li>";
+                cafeTableBody.innerHTML = "<li>No cafes found matching your search</li>";
                 return;
             }
 
@@ -176,7 +181,7 @@ function fetchCafesBySearchFilter() {
                 const listCafes = document.createElement("li");
                 listCafes.innerText = `${cafe.name}, ${cafe.location}, Rating: ${cafe.rating}), 
                 Price range: ${cafe.price_range} - Size: ${cafe.size}`;
-                cafeList.appendChild(listCafes);
+                cafeTableBody.appendChild(listCafes);
 
                 const createFavoriteButton = document.createElement('button')
                 createFavoriteButton.dataset.id = cafe.cafe_id
@@ -186,7 +191,7 @@ function fetchCafesBySearchFilter() {
         })
         .catch(error => {
             console.error("Error fetching cafes:", error);
-            cafeList.innerHTML = "<li>Error fetching cafes. Please try again later.</li>";
+            cafeTableBody.innerHTML = "<li>Error fetching cafes. Please try again later.</li>";
         });
 }
 
@@ -224,4 +229,47 @@ async function login () {
 // Click event for login
 const loginButton = document.querySelector('#loginButton')
 loginButton.addEventListener('click', login)
+
+// JavaScript to fetch cafe data and display it in the table
+
+document.addEventListener("DOMContentLoaded", function() {
+    // Get the table body where cafe data will be inserted
+    const cafeTableBody = document.querySelector('#cafes tbody');
+
+
+    // Fetch cafes data from the API
+    fetch('http://localhost:4000/cafes/all')
+        .then(response => response.json())
+        .then(data => {
+            // Clear any existing rows in the table body
+            cafeTableBody.innerHTML = '';
+
+
+            // Check if data exists
+            if (data && Array.isArray(data)) {
+                data.forEach(cafe => {
+                    const row = document.createElement('tr');
+
+
+                    // Create table data cells for each cafe property
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = cafe.name;
+                    row.appendChild(nameCell);
+
+
+                    const ratingCell = document.createElement('td');
+                    ratingCell.textContent = cafe.rating;
+                    row.appendChild(ratingCell);
+
+
+                    // Append the row to the table body
+                    cafeTableBody.appendChild(row);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching cafes data:', error);
+        });
+});
+
 

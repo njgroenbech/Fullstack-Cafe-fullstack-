@@ -87,14 +87,14 @@ app.get('/cafes/all', (req, res) => {
 
 // ----------------- Endpoint for adding a new cafe (POST /cafes/new) -----------//
 app.post('/cafes/new', (req, res) => {
-    const { name, location, rating, description } = req.body;
+    const { name, location, rating, description, price_range, size } = req.body;
 
-    if (!name || !location || !rating || !description) {
+    if (!name || !location || !rating || !description || !price_range || !size) {
         return res.status(400).send('Missing name, location, rating or description');
     }
 
-    const query = 'INSERT INTO cafes (name, location, rating, description) VALUES (?, ?, ?, ?)';
-    connection.query(query, [name, location, rating, description], (error, results) => {
+    const query = 'INSERT INTO cafes (name, location, rating, description, price_range, size) VALUES (?, ?, ?, ?, ?, ?)';
+    connection.query(query, [name, location, rating, description, price_range, size], (error, results) => {
         if (error) {
             console.error('Error inserting cafe:', error);
             return res.status(500).send('Database insertion error');
@@ -235,77 +235,6 @@ app.post('/users/new', (req, res) => {
     });
 });
 
-// Function to check if user exists
-/* function checkIfUserExists (user_id) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM users WHERE user_id = ?'
-        connection.query(query, [user_id], (error, results) => {
-            if (error) {
-                return reject(error)
-            } else {
-                resolve(results.length > 0)
-            }
-        });
-    });
-}
-// Check if user exists
-function checkIfCafeExists (cafe_id) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM cafes WHERE cafe_id = ?'
-        connection.query(query, [cafe_id], (error, results) => {
-            if (error) {
-                return reject(error)
-            } else {
-                resolve(results.length > 0)
-            }
-        });
-    });
-}
-// Check if favorite exists
-function checkIfFavoriteExists(user_id, cafe_id) {
-    return new Promise((resolve, reject) => {
-        const query = 'SELECT * FROM favorites WHERE user_id = ? AND cafe_id = ?';
-        connection.query(query, [user_id, cafe_id], (error, results) => {
-            if (error) return reject(error);
-            resolve(results.length > 0);
-        });
-    });
-}
-function addToFavorites (user_id, cafe_id) {
-    return new Promise((resolve, reject) => {
-        const query = 'INSERT INTO favorites (user_id, cafe_id) VALUES (?, ?)'
-        connection.query(query, [user_id, cafe_id], (error, results) => {
-            if (error) {
-                return reject(error)
-            }
-            resolve(results);
-        });
-    });
-}
-// ------------------- Endpoint for adding favorites-------------------- //
-app.post('/favorites', async (req, res) => {
-    try {
-        const { user_id, cafe_id } = req.body
-        const userExists = await checkIfUserExists(user_id);
-        if (!userExists) {
-            return res.status(404).send('user_id not found');
-        }
-        const cafeExists = await checkIfCafeExists(cafe_id);
-        if (!cafeExists) {
-            return res.status(404).send('cafe_id not found')
-        }
-        const favoriteExists = await checkIfFavoriteExists(user_id, cafe_id);
-        if (favoriteExists) {
-            return res.status(404).send('Favorite already exists')
-        }
-        await addToFavorites(user_id, cafe_id);
-        res.status(201).send('Favorite added')
-    } catch (error) {
-        res.status(500).send('Serverside error')
-    }
-});*/
-
-// ----------------- Check if username is in users table to be able to push into cafe table  ---------------------//
 // Endpoint to check if a username exists in the users table
 app.get('/users/check', (req, res) => {
     const { username } = req.query;

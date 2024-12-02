@@ -33,6 +33,18 @@
         <input type="text" id="description" name="description" required>
       </div>
       <div class="form-group">
+        <select name="price_range" id="price_range" multiple>
+          <option value="low">Low - Budget-friendly options</option>
+          <option value="mid">Mid - Moderate pricing</option>
+          <option value="high">High - Premium pricing</option>
+        </select>
+        <select name="size_range" id="size_range" multiple>
+          <option value="small">Small - A small cafe</option>
+          <option value="medium">Medium - Average sized cafe</option>
+          <option value="large">Large - A large cafe</option>
+        </select>
+      </div>
+      <div class="form-group">
         <button id="submitCafe" type="button">Submit</button>
       </div>
     </form>
@@ -77,26 +89,47 @@
         </form>
       </div>
     </div>
-</div>
+  </div>
   <ul id="all-user"></ul>
 </div>
 <div id="search">
-  <input type="text" id="nameF" placeholder="Search by name">
-  <input type="text" id="locationF" placeholder="City">
-  <input type="number" id="ratingF" placeholder="Minimum rating (1-5)">
-  <select name="prices" id="prices" multiple>
+  <input type="text" id="nameF" placeholder="Search by name" aria-label="Search by name">
+  <input type="text" id="locationF" placeholder="City" aria-label="Search by city">
+  <input type="number" id="ratingF" placeholder="Minimum rating (1-5)" aria-label="Search by minimum rating">
+  <label for="prices">Select price range:</label>
+  <select name="prices" id="prices" multiple aria-label="Filter by price range">
     <option value="low">Low - Budget-friendly options</option>
     <option value="mid">Mid - Moderate pricing</option>
     <option value="high">High - Premium pricing</option>
   </select>
-  <select name="size" id="size" multiple>
+  <label for="size">Select cafe size:</label>
+  <select name="size" id="size" multiple aria-label="Filter by cafe size">
     <option value="small">Small - A small cafe</option>
     <option value="medium">Medium - Average sized cafe</option>
-    <option value="large">Large cafe</option>
+    <option value="large">Large - A large cafe</option>
   </select>
-  <input type="text" id="descriptionF" placeholder="Search in description">
-  <button id="filterButton">Search</button>
+  <input type="text" id="descriptionF" placeholder="Search in description" aria-label="Search by description">
+  <button id="filterButton" aria-label="Apply search filters">Search</button>
 </div>
+
+
+<div class="cafes-table-container">
+  <h2>Cafe List</h2>
+  <table id="cafes" aria-describedby="search">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Rating</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Dynamic rows will be inserted here -->
+    </tbody>
+  </table>
+</div>
+
+
+
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script src="main.js"></script>
@@ -107,4 +140,3 @@
 </script>
 </body>
 </html>
-

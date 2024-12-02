@@ -1,78 +1,241 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background-color: #f4f4f4;
+    color: #333;
+    line-height: 1.6;
     margin: 0;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
 }
 
-.form-container {
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    padding: 100px;
-    width: 50px;
-    max-width: 50%;
-    margin-left: 50px;
-}
 
+/* Flexbox layout */
 .flexbox {
     display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    margin: 20px;
 }
+
 
 .form-container {
     background-color: #ffffff;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     padding: 30px;
-    width: 400px;
+    width: 350px;
     max-width: 100%;
 }
 
+
+/* Form-header styling */
 .form-header {
     text-align: center;
     color: #333;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
+
+/* Form-element styling */
 .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
 }
+
 
 .form-group label {
     display: block;
     font-size: 14px;
-    margin-bottom: 8px;
     color: #555;
+    margin-bottom: 8px;
 }
 
-.form-group input {
+
+.form-group input,
+.form-group select {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    box-sizing: border-box;
 }
+
 
 .form-group button {
     background-color: #3498db;
-    color: #fff;
+    color: white;
     border: none;
-    padding: 12px;
+    padding: 10px;
     border-radius: 4px;
-    cursor: pointer;
     font-size: 16px;
+    cursor: pointer;
     width: 100%;
+    transition: background-color 0.3s;
 }
+
 
 .form-group button:hover {
     background-color: #2980b9;
 }
 
+
+/* Søgefelt styling */
 #search {
     display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin: 20px;
+    width: 80%;
+    max-width: 800px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+
+#search input,
+#search select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    width: 180px;
+    max-width: 100%;
+}
+
+
+#filterButton {
+    background-color: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+
+#filterButton:hover {
+    background-color: #219150;
+}
+
+
+/* List styles */
+ul {
+    list-style: none;
+    width: 100%;
+    max-width: 800px;
+    margin-top: 20px;
+}
+
+
+ul#all-cafe li,
+ul#all-user li {
+    background-color: #ffffff;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+
+ul#all-cafe li:hover,
+ul#all-user li:hover {
+    background-color: #f0f0f0;
+}
+
+
+/* Responsivt design */
+@media (max-width: 768px) {
+    .form-container {
+        width: 100%; /* Ensure full-width form on smaller screens */
+    }
+
+
+    #search {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px; /* Add more spacing between elements */
+    }
+
+
+    #search input,
+    #search select {
+        width: 100%; /* Full-width for inputs and select elements */
+    }
+
+
+    #filterButton {
+        align-self: center; /* Center the button on smaller screens */
+        width: auto; /* Adjust width for better visibility */
+        padding: 10px 30px; /* More padding for a balanced appearance */
+    }
+}
+
+
+/* Table Styling for Cafe List */
+.cafes-table-container {
+    width: 100%; /* Ensure full-width container for smaller screens */
+    max-width: 1000px;
+    margin-top: 20px; /* Reduce top margin for smaller screens */
+    padding: 15px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    overflow-x: auto; /* Add horizontal scroll for tables on small screens */
+}
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+
+th, td {
+    padding: 12px 10px; /* Slightly smaller padding for better fit */
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    white-space: nowrap; /* Prevent text wrapping for narrow columns */
+}
+
+
+th {
+    background-color: #3498db;
+    color: white;
+    font-size: 14px; /* Slightly smaller font size for better fit */
+}
+
+
+td {
+    font-size: 13px; /* Adjust font size for smaller screens */
+}
+
+
+tr:hover {
+    background-color: #f0f0f0;
+}
+
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
 }
